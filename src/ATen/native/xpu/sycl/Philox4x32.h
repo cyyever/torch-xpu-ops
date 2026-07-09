@@ -47,12 +47,13 @@
 
 #include <ATen/core/DistributionsHelper.h>
 #include <ATen/native/xpu/sycl/MemoryAccess.h>
+#include <numbers>
 
 namespace at {
 namespace native {
 namespace xpu {
 
-#define EXTRA_FLAG_NORMAL 0x00000001
+inline constexpr int EXTRA_FLAG_NORMAL = 0x00000001;
 
 template <typename T>
 struct alignas(sizeof(T) * 2) rand_vec2 {
@@ -328,10 +329,10 @@ static inline uint4 rand4(randStatePhilox4_32_10_t* state) {
   return r;
 }
 
-#define RAND_2POW32_INV (2.3283064e-10f)
-#define RAND_2POW32_INV_2PI (2.3283064e-10f * 6.2831855f)
-#define RAND_2POW53_INV_DOUBLE (1.1102230246251565e-16)
-#define RAND_PI_DOUBLE (3.1415926535897932)
+inline constexpr float RAND_2POW32_INV = 2.3283064e-10f;
+inline constexpr float RAND_2POW32_INV_2PI =
+    RAND_2POW32_INV * 2 * std::numbers::pi_v<float>;
+inline constexpr double RAND_2POW53_INV_DOUBLE = 1.1102230246251565e-16;
 
 // =================== uniform ===================
 
@@ -380,8 +381,8 @@ static inline float2 _rand_box_muller(unsigned int x, unsigned int y) {
   float u = x * RAND_2POW32_INV + (RAND_2POW32_INV / 2);
   float v = y * RAND_2POW32_INV_2PI + (RAND_2POW32_INV_2PI / 2);
   float s = sycl::sqrt(-2.0f * sycl::log(u));
-  result.x = std::sin(v);
-  result.y = std::cos(v);
+  result.x = sycl::sin(v);
+  result.y = sycl::cos(v);
   result.x *= s;
   result.y *= s;
   return result;
@@ -415,8 +416,8 @@ static inline double2 _rand_box_muller_double(
   double v = zy * (RAND_2POW53_INV_DOUBLE * 2.0) + RAND_2POW53_INV_DOUBLE;
   double s = sycl::sqrt(-2.0 * sycl::log(u));
 
-  result.x = std::sin(v * RAND_PI_DOUBLE);
-  result.y = std::cos(v * RAND_PI_DOUBLE);
+  result.x = sycl::sin(v * std::numbers::pi);
+  result.y = sycl::cos(v * std::numbers::pi);
   result.x *= s;
   result.y *= s;
 

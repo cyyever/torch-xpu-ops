@@ -88,7 +88,7 @@ static inline C10_HOST_DEVICE scalar_t calc_digamma(scalar_t in) {
   // [C++ Standard Reference: Gamma Function]
   // https://en.cppreference.com/w/cpp/numeric/math/tgamma
   using accscalar_t = at::acc_type_device<scalar_t, kXPU>;
-  static const pi_t PI_f64 = 3.14159265358979323846;
+  constexpr pi_t PI_f64 = std::numbers::pi;
   const accscalar_t PSI_10 = 2.25175258906672110764;
   const accscalar_t A[] = {
       8.33333333333333333333E-2,
@@ -153,7 +153,7 @@ static inline C10_HOST_DEVICE scalar_t calc_digamma(scalar_t in) {
 template <typename scalar_t>
 static inline C10_HOST_DEVICE scalar_t calc_trigamma(scalar_t in) {
   using accscalar_t = at::acc_type_device<scalar_t, kXPU>;
-  const accscalar_t PI = 3.14159265358979323846;
+  constexpr accscalar_t PI = std::numbers::pi;
   accscalar_t x = static_cast<accscalar_t>(in);
   accscalar_t sign = +1;
   accscalar_t result = 0;
@@ -313,7 +313,7 @@ static scalar_t _igam_helper_fac(scalar_t a, scalar_t x) {
   static const accscalar_t MAXLOG = std::is_same<accscalar_t, double>::value
       ? 7.09782712893383996843E2
       : 88.72283905206835;
-  static const accscalar_t EXP1 = 2.718281828459045;
+  constexpr accscalar_t EXP1 = std::numbers::e;
   static const accscalar_t lanczos_g = 6.024680040776729583740234375;
 
   if (sycl::fabs(a - x) > 0.4 * sycl::fabs(a)) {
@@ -703,7 +703,7 @@ static const scalar_t _igam_helper_asymptotic_series(
     absoldterm = absterm;
     afac /= a;
   }
-  const accscalar_t PI = 3.14159265358979323846;
+  constexpr accscalar_t PI = std::numbers::pi;
   res += sgn * sycl::exp(-0.5 * a * eta * eta) * sum / sycl::sqrt(2 * PI * a);
 
   return res;
@@ -1510,7 +1510,7 @@ static inline C10_HOST_DEVICE T airy_ai_forward(T x) {
     }
 
     T t = T(-2.0f) * x * sycl::sqrt(-x) / T(3.0f) +
-        T(0.25f) * T(3.14159265358979323846f);
+        T(0.25f) * T(std::numbers::pi_v<float>);
 
     return T(5.64189583547756286948e-01f) / sycl::sqrt(sycl::sqrt(-x)) *
         (std::sin(t) * (T(1.0f) + z * z * afn / afd) -
