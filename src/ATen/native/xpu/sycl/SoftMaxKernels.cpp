@@ -10,6 +10,7 @@
 
 #include <ATen/AccumulateType.h>
 #include <ATen/Dispatch.h>
+#include <ATen/NumericUtils.h>
 #include <ATen/native/CanUse32BitIndexMath.h>
 #include <ATen/native/TensorIterator.h>
 #include <ATen/native/xpu/sycl/Loops.h>
@@ -310,6 +311,8 @@ struct DispatchSoftmaxForwardKernelFunctor
     else if (sum_value != 0)
       sum_value = accscalar_t(1) / sum_value;
 
+      // The max reduce can drop a NaN; a fully masked row's sum never is one.
+
       // update result
 #pragma unroll(outer_loop)
     for (int i = 0; i < outer_loop; ++i) {
@@ -326,7 +329,8 @@ struct DispatchSoftmaxForwardKernelFunctor
                 static_cast<outscalar_t>(reg_in[i][j] - max_value - sum_value);
           } else if (
               is_safe_softmax &&
-              max_value == std::numeric_limits<accscalar_t>::lowest()) {
+              max_value == std::numeric_limits<accscalar_t>::lowest() &&
+              !at::_isnan(sum_value)) {
             reg_in[i][j] = static_cast<outscalar_t>(0);
           } else if (sum_value == 0) {
             reg_in[i][j] = nan_;
@@ -340,7 +344,8 @@ struct DispatchSoftmaxForwardKernelFunctor
                 static_cast<outscalar_t>(reg_in[i][j] - max_value - sum_value);
           } else if (
               is_safe_softmax &&
-              max_value == std::numeric_limits<accscalar_t>::lowest()) {
+              max_value == std::numeric_limits<accscalar_t>::lowest() &&
+              !at::_isnan(sum_value)) {
             out_data_point[j] = static_cast<outscalar_t>(0);
           } else if (sum_value == 0) {
             out_data_point[j] = static_cast<outscalar_t>(nan_);
@@ -597,6 +602,8 @@ struct SoftmaxForwardKernelFunctor {
     else
       sum_value = accscalar_t(1) / sum_value;
 
+    // The max reduce can drop a NaN; a fully masked row's sum never is one.
+
     // update result
     constexpr int out_vec_size = align_bytes / sizeof(outscalar_t);
     using out_vec_t =
@@ -620,7 +627,8 @@ struct SoftmaxForwardKernelFunctor {
                   in_data_[group_offset + linear_idx] - max_value - sum_value);
             else if (
                 is_safe_softmax &&
-                max_value == std::numeric_limits<accscalar_t>::lowest())
+                max_value == std::numeric_limits<accscalar_t>::lowest() &&
+                !at::_isnan(sum_value))
               out_data_[group_offset + linear_idx] =
                   static_cast<outscalar_t>(0);
             else
@@ -640,7 +648,8 @@ struct SoftmaxForwardKernelFunctor {
                 static_cast<outscalar_t>(in_val[j] - max_value - sum_value);
           else if (
               is_safe_softmax &&
-              max_value == std::numeric_limits<accscalar_t>::lowest())
+              max_value == std::numeric_limits<accscalar_t>::lowest() &&
+              !at::_isnan(sum_value))
             results[j] = static_cast<outscalar_t>(0);
           else
             results[j] = static_cast<outscalar_t>(
