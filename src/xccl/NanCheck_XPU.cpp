@@ -145,7 +145,7 @@ struct checkForNaN {
     // Align input address up to BytePack in case it is not
     T* ptrAlign = (T*)ALIGN_UP(data, BytePack);
     size_t preProcElts =
-        std::min<size_t>(static_cast<size_t>(ptrAlign - data), size);
+        sycl::min<size_t>(static_cast<size_t>(ptrAlign - data), size);
 
     size_t size_left = size;
 

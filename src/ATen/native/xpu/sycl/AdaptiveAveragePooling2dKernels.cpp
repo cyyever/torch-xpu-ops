@@ -310,9 +310,9 @@ struct AdaptiveAvgPool2dBwdSLMChannelsLastKernelFunctor
     index_t iW =
         (isizeW_ + item.get_group_range(1) - 1) / item.get_group_range(1);
     index_t istartH = item.get_local_id(0) + item.get_group(0) * iH;
-    index_t iendH = std::min(istartH + iH, isizeH_);
+    index_t iendH = sycl::min(istartH + iH, isizeH_);
     index_t istartW = item.get_local_id(1) + item.get_group(1) * iW;
-    index_t iendW = std::min(istartW + iW, isizeW_);
+    index_t iendW = sycl::min(istartW + iW, isizeW_);
 
     // Stride for threads, each subgroup can reuse L1 as they go. So
     // theoretically better chance to survive cache eviction.

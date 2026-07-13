@@ -353,7 +353,7 @@ struct KaiserWindowFunctor {
 
   scalar_t operator()(scalar_t a) const {
     opmath_t norm = static_cast<opmath_t>(a) * inv_alpha_ - 1;
-    opmath_t sqrt_term = std::max<opmath_t>(0, 1 - norm * norm);
+    opmath_t sqrt_term = sycl::max<opmath_t>(0, 1 - norm * norm);
     return calc_i0(beta_ * sycl::sqrt(sqrt_term)) * inv_i0_beta_;
   }
 

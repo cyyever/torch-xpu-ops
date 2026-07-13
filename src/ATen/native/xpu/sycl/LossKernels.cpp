@@ -34,8 +34,8 @@ struct BinaryCrossEntropyFunctor {
     scalar_t log_1_minus_input_val =
         sycl::log1p(static_cast<opmath_t>(-input_val));
 
-    log_input_val = std::max(log_input_val, neg_100);
-    log_1_minus_input_val = std::max(log_1_minus_input_val, neg_100);
+    log_input_val = sycl::max(log_input_val, neg_100);
+    log_1_minus_input_val = sycl::max(log_1_minus_input_val, neg_100);
 
     return ((target_val - one) * log_1_minus_input_val) -
         (target_val * log_input_val);
@@ -89,7 +89,7 @@ struct BinaryCrossEntropyBackwardFunctor {
     const scalar_t epsilon = EPSILON;
 
     scalar_t grad_input_denominator =
-        std::max((one - input_val) * input_val, epsilon);
+        sycl::max((one - input_val) * input_val, epsilon);
 
     return grad_val * (input_val - target_val) / grad_input_denominator;
   }

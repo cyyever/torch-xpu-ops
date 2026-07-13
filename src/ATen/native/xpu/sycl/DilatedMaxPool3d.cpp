@@ -63,11 +63,11 @@ struct MaxPool3dKernelFunctor {
       int tStart = oTime * dT_ - pT_;
       int hStart = oRow * dH_ - pH_;
       int wStart = oColumn * dW_ - pW_;
-      int tEnd = std::min(
+      int tEnd = sycl::min(
           tStart + (kT_ - 1) * dilationT_ + 1, static_cast<int>(itime_));
-      int hEnd = std::min(
+      int hEnd = sycl::min(
           hStart + (kH_ - 1) * dilationH_ + 1, static_cast<int>(iheight_));
-      int wEnd = std::min(
+      int wEnd = sycl::min(
           wStart + (kW_ - 1) * dilationW_ + 1, static_cast<int>(iwidth_));
 
       while (tStart < 0)

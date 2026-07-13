@@ -22,7 +22,9 @@ template <typename scalar_t, typename opmath_t>
 struct HardsigmoidFunctor {
   scalar_t operator()(scalar_t self_val) const {
     opmath_t x = static_cast<opmath_t>(self_val);
-    return std::min(std::max(x + three_, zero_), six_) * one_sixth_;
+    // Not sycl::clamp: it is fmin(fmax(..)), which suppresses NaN, while
+    // CPU/CUDA propagate it.
+    return sycl::min(sycl::max(x + three_, zero_), six_) * one_sixth_;
   }
 
   HardsigmoidFunctor(

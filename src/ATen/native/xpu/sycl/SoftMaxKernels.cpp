@@ -270,7 +270,7 @@ struct DispatchSoftmaxForwardKernelFunctor
             reg_in[i][j] = neginf_;
           }
         }
-        max_value = std::max(max_value, accscalar_t(reg_in[i][j]));
+        max_value = sycl::max(max_value, accscalar_t(reg_in[i][j]));
       }
     }
     if (local_size_ > 1) {
@@ -281,7 +281,7 @@ struct DispatchSoftmaxForwardKernelFunctor
           max_value,
           std::numeric_limits<accscalar_t>::lowest(),
           local_max_,
-          [](accscalar_t a, accscalar_t b) { return std::max(a, b); });
+          [](accscalar_t a, accscalar_t b) { return sycl::max(a, b); });
     }
 
     // get sum value
@@ -571,7 +571,7 @@ struct SoftmaxForwardKernelFunctor {
         IndexType linear_idx = i * vec_size + j - start;
         if (linear_idx >= 0 && linear_idx < dim_size_) {
           inscalar_t in_value = in_val[j];
-          max_value = std::max(accscalar_t(in_value), max_value);
+          max_value = sycl::max(accscalar_t(in_value), max_value);
         }
       }
     }
@@ -756,7 +756,7 @@ struct SpatialSoftmaxForwardKernelFunctor
           *(reinterpret_cast<const vec_t*>(in_data_ + group_offset + offset));
 #pragma unroll(vec_size)
       for (int j = 0; j < vec_size; ++j) {
-        max_value[j] = std::max(max_value[j], accscalar_t(value[j]));
+        max_value[j] = sycl::max(max_value[j], accscalar_t(value[j]));
       }
     }
     if (block_row_ > 1) {
@@ -765,7 +765,7 @@ struct SpatialSoftmaxForwardKernelFunctor
           max_value,
           local_data_,
           block_row_,
-          [](accscalar_t a, accscalar_t b) { return std::max(a, b); });
+          [](accscalar_t a, accscalar_t b) { return sycl::max(a, b); });
 #pragma unroll(vec_size)
       for (int j = 0; j < vec_size; ++j) {
         max_value[j] = local_data_[0][local_col_id][j];

@@ -50,8 +50,8 @@ struct QuantizerTensorPerChannelAffineFunctor {
       int64_t zero_point) const {
     int64_t qvalue =
         static_cast<int64_t>(sycl::rint(raw_val / scale) + zero_point);
-    qvalue = std::max<int64_t>(qvalue, qmin_);
-    qvalue = std::min<int64_t>(qvalue, qmax_);
+    qvalue = sycl::max<int64_t>(qvalue, qmin_);
+    qvalue = sycl::min<int64_t>(qvalue, qmax_);
     quantized_val.val_ = qvalue;
     return quantized_val;
   }
@@ -144,8 +144,8 @@ struct QuantizerTensorPerChannelFloatQparamsFunctor {
     float inv_scale = 1.0f / scale;
     int64_t qvalue =
         static_cast<int64_t>(rintf(raw_val * inv_scale + zero_point));
-    qvalue = std::max<int64_t>(qvalue, qmin_);
-    qvalue = std::min<int64_t>(qvalue, qmax_);
+    qvalue = sycl::max<int64_t>(qvalue, qmin_);
+    qvalue = sycl::min<int64_t>(qvalue, qmax_);
     quantized_val.val_ = qvalue;
     return quantized_val;
   }
@@ -239,8 +239,8 @@ struct QuantizerTensorPerTensorAffineFunctor {
   scalar_t operator()(float raw_val, scalar_t quantized_val) const {
     int64_t qvalue =
         static_cast<int64_t>(sycl::rint(raw_val / scale_) + zero_point_);
-    qvalue = std::max<int64_t>(qvalue, qmin_);
-    qvalue = std::min<int64_t>(qvalue, qmax_);
+    qvalue = sycl::max<int64_t>(qvalue, qmin_);
+    qvalue = sycl::min<int64_t>(qvalue, qmax_);
     quantized_val.val_ = qvalue;
     return quantized_val;
   }

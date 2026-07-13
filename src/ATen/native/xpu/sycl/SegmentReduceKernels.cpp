@@ -63,7 +63,7 @@ struct SegmentReduceForwardKernelFunctor {
         initial_value =
             sycl::isnan(static_cast<at::opmath_type<scalar_t>>(data))
             ? data
-            : std::max<scalar_t>(initial_value, data);
+            : sycl::max<scalar_t>(initial_value, data);
       } else if (
           reduction_ == native::ReductionType::MEAN ||
           reduction_ == native::ReductionType::SUM) {
@@ -72,7 +72,7 @@ struct SegmentReduceForwardKernelFunctor {
         initial_value =
             sycl::isnan(static_cast<at::opmath_type<scalar_t>>(data))
             ? data
-            : std::min<scalar_t>(initial_value, data);
+            : sycl::min<scalar_t>(initial_value, data);
       } else if (reduction_ == native::ReductionType::PROD) {
         initial_value = initial_value * data;
       }

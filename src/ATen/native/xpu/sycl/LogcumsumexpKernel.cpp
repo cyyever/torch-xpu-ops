@@ -48,8 +48,8 @@ scalar_t _log_add_exp_helper(const scalar_t& x, const scalar_t& y) {
   // an error in ROCM
   auto isnan_x = at::_isnan(x);
   auto isnan_y = at::_isnan(y);
-  scalar_t min = isnan_y ? y : (isnan_x ? x : std::min(x, y));
-  scalar_t max = isnan_y ? y : (isnan_x ? x : std::max(x, y));
+  scalar_t min = isnan_y ? y : (isnan_x ? x : sycl::min(x, y));
+  scalar_t max = isnan_y ? y : (isnan_x ? x : sycl::max(x, y));
   if (min != max || sycl::isfinite(min)) {
     // nan will be propagated here
     return sycl::log1p(sycl::exp(min - max)) + max;

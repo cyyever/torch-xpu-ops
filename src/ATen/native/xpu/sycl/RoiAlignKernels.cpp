@@ -41,18 +41,18 @@ T bilinear_interpolate(
     return 0;
   }
 
-  y = std::max(T(0), y);
-  x = std::max(T(0), x);
+  y = sycl::max(T(0), y);
+  x = sycl::max(T(0), x);
 
   int y_low = (int)y;
   int x_low = (int)x;
   int y_high;
   int x_high;
 
-  y_low = std::min(height - 1, y_low);
-  x_low = std::min(width - 1, x_low);
-  y_high = std::min(y_low + 1, height - 1);
-  x_high = std::min(x_low + 1, width - 1);
+  y_low = sycl::min(height - 1, y_low);
+  x_low = sycl::min(width - 1, x_low);
+  y_high = sycl::min(y_low + 1, height - 1);
+  x_high = sycl::min(x_low + 1, width - 1);
 
   if (y_low == height - 1) {
     y = (T)y_low;
@@ -116,8 +116,8 @@ struct RoiAlignForwardKernel : public __SYCL_KER_CONFIG_CONVENTION__ {
       T roi_height = roi_end_h - roi_start_h;
       if (!aligned_) {
         // Force malformed ROIs to be 1x1
-        roi_width = std::max(roi_width, (T)1.);
-        roi_height = std::max(roi_height, (T)1.);
+        roi_width = sycl::max(roi_width, (T)1.);
+        roi_height = sycl::max(roi_height, (T)1.);
       }
 
       T bin_size_h =
@@ -142,7 +142,7 @@ struct RoiAlignForwardKernel : public __SYCL_KER_CONFIG_CONVENTION__ {
 
       // We do average (integral) pooling inside a bin
       // When the grid is empty, output zeros.
-      const T count = std::max(
+      const T count = sycl::max(
           (int)(roi_bin_grid_h * roi_bin_grid_w), (int)(1)); // e.g. = 4
 
       T output_val = 0.;
@@ -303,8 +303,8 @@ struct RoiAlignBackwardKernel {
       T roi_height = roi_end_h - roi_start_h;
       if (!aligned_) {
         // Force malformed ROIs to be 1x1
-        roi_width = std::max(roi_width, (T)1.);
-        roi_height = std::max(roi_height, (T)1.);
+        roi_width = sycl::max(roi_width, (T)1.);
+        roi_height = sycl::max(roi_height, (T)1.);
       }
 
       T bin_size_h =

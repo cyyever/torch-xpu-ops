@@ -26,10 +26,10 @@ inline bool dev_iou(
     scalar_t const* const a,
     scalar_t const* const b,
     const float threshold) {
-  scalar_t left = std::max(a[0], b[0]), right = std::min(a[2], b[2]);
-  scalar_t top = std::max(a[1], b[1]), bottom = std::min(a[3], b[3]);
-  scalar_t width = std::max(right - left, (scalar_t)0),
-           height = std::max(bottom - top, (scalar_t)0);
+  scalar_t left = sycl::max(a[0], b[0]), right = sycl::min(a[2], b[2]);
+  scalar_t top = sycl::max(a[1], b[1]), bottom = sycl::min(a[3], b[3]);
+  scalar_t width = sycl::max(right - left, (scalar_t)0),
+           height = sycl::max(bottom - top, (scalar_t)0);
   using acc_t = acc_type_device<scalar_t, kXPU>;
   acc_t area_inter = (acc_t)width * height;
   acc_t area_a = ((acc_t)a[2] - a[0]) * (a[3] - a[1]);
@@ -46,9 +46,9 @@ struct NMSKernelFunctor : public __SYCL_KER_CONFIG_CONVENTION__ {
     if (row_start > col_start)
       return;
 
-    const int row_size = std::min(
+    const int row_size = sycl::min(
         dets_num_ - row_start * nms_items_per_group, nms_items_per_group);
-    const int col_size = std::min(
+    const int col_size = sycl::min(
         dets_num_ - col_start * nms_items_per_group, nms_items_per_group);
 
     auto block_boxes =

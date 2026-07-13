@@ -82,7 +82,7 @@ struct BinaryOpIntersectionKernelFunctor {
     accscalar_t rhs_values;
     index_t rhs_sorted_nnz_idx;
     const auto match_count =
-        accumulate_matches_ ? count : std::min<int64_t>(count, 1);
+        accumulate_matches_ ? count : sycl::min<int64_t>(count, 1);
     for (int64_t c = 0; c < match_count; ++c) {
       rhs_sorted_nnz_idx = *ptr_rhs_sorted_nnz_idx++;
       rhs_values = static_cast<accscalar_t>(

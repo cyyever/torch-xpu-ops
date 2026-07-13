@@ -31,7 +31,9 @@ struct HardswishFunctor {
     const opmath_t three(3.0f);
     const opmath_t six(6.0f);
     opmath_t x = static_cast<opmath_t>(self_val);
-    return x * std::min(std::max(x + three, zero), six) * one_sixth;
+    // Not sycl::clamp: it is fmin(fmax(..)), which suppresses NaN, while
+    // CPU/CUDA propagate it.
+    return x * sycl::min(sycl::max(x + three, zero), six) * one_sixth;
   }
 };
 

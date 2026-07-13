@@ -166,7 +166,7 @@ void ChooseQuantizationParamsKernelImpl(
       int symmetric_qmin = -((qmax - qmin) / 2 + 1);
       int symmetric_qmax = (qmax - qmin) / 2;
 
-      float max_scale = std::max(
+      float max_scale = sycl::max(
           sycl::fabs(min_val / symmetric_qmin),
           sycl::fabs(max_val / symmetric_qmax));
       min_val = max_scale * symmetric_qmin;
@@ -176,8 +176,8 @@ void ChooseQuantizationParamsKernelImpl(
     // We extend the [min, max] interval to ensure that it contains 0.
     // Otherwise, we would not meet the requirement that 0 be an exactly
     // representable value.
-    min_val = std::min(min_val, 0.f);
-    max_val = std::max(max_val, 0.f);
+    min_val = sycl::min(min_val, 0.f);
+    max_val = sycl::max(max_val, 0.f);
     scale[i] = (static_cast<double>(max_val) - min_val) / (qmax - qmin);
 
     // Moving this check outside this function would result in extra Device to

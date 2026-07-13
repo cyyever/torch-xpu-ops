@@ -22,7 +22,7 @@ namespace at::native::xpu {
 template <typename scalar_t>
 struct MaximumIntFunctor {
   scalar_t operator()(scalar_t a, scalar_t b) const {
-    return std::max(a, b);
+    return sycl::max(a, b);
   }
 };
 
@@ -42,7 +42,7 @@ struct MaximumFunctor {
     } else if (b != b) {
       return b;
     } else {
-      return std::max(a, b);
+      return sycl::max(a, b);
     }
   }
 };
@@ -72,7 +72,7 @@ void maximum_kernel(TensorIteratorBase& iter) {
 template <typename scalar_t>
 struct MinimumIntFunctor {
   scalar_t operator()(scalar_t a, scalar_t b) const {
-    return std::min(a, b);
+    return sycl::min(a, b);
   }
 };
 
@@ -92,7 +92,7 @@ struct MinimumFunctor {
     } else if (b != b) {
       return b;
     } else {
-      return std::min(a, b);
+      return sycl::min(a, b);
     }
   }
 };

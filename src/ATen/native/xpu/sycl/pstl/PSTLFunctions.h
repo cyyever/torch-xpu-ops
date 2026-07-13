@@ -1159,7 +1159,7 @@ inline void leaf_sort(
     size_t sorted_sz,
     const CompFunc& comp_t) {
   auto start = item.get_linear_id() * n;
-  auto end = std::min(start + n, sorted_sz);
+  auto end = sycl::min(start + n, sorted_sz);
   for (size_t i = start; i < end; ++i) {
     for (size_t j = start + 1; j < start + end - i; ++j) {
       // for stable sort, the condition should be:
@@ -1288,10 +1288,10 @@ inline void merge(
     const size_t sq2_end,
     const size_t chunk_size,
     const CompFunc& comp_t) {
-  const size_t chunk1_start = std::min((offset + sq1_start), sq1_end);
-  const size_t chunk1_end = std::min((chunk1_start + chunk_size), sq1_end);
-  const size_t chunk2_start = std::min((offset + sq2_start), sq2_end);
-  const size_t chunk2_end = std::min((chunk2_start + chunk_size), sq2_end);
+  const size_t chunk1_start = sycl::min((offset + sq1_start), sq1_end);
+  const size_t chunk1_end = sycl::min((chunk1_start + chunk_size), sq1_end);
+  const size_t chunk2_start = sycl::min((offset + sq2_start), sq2_end);
+  const size_t chunk2_end = sycl::min((chunk2_start + chunk_size), sq2_end);
 
   const size_t chunk1_size = chunk1_end - chunk1_start;
   const size_t chunk2_size = chunk2_end - chunk2_start;
@@ -1545,10 +1545,10 @@ struct MergeSortKernelFunctor {
   void operator()(sycl::item<1> item) const {
     const size_t idx = item.get_linear_id();
     const size_t sq1_start =
-        std::min(sorted_pair_ * ((idx * chunk_) / sorted_), sort_sz_);
-    const size_t sq1_end = std::min(sq1_start + sorted_, sort_sz_);
+        sycl::min(sorted_pair_ * ((idx * chunk_) / sorted_), sort_sz_);
+    const size_t sq1_end = sycl::min(sq1_start + sorted_, sort_sz_);
     const size_t sq2_start = sq1_end;
-    const size_t sq2_end = std::min(sq2_start + sorted_, sort_sz_);
+    const size_t sq2_end = sycl::min(sq2_start + sorted_, sort_sz_);
 
     const size_t offset_in_sq = chunk_ * (idx % chunk_num_per_sorted_);
 

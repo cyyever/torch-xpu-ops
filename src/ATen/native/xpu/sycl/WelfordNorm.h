@@ -55,7 +55,7 @@ inline void welford_merge(
     const C& count_new,
     const T& mean_new,
     const T& m2n_new) {
-  T factor = T(1.0) / std::max(1, (count + count_new));
+  T factor = T(1.0) / sycl::max(1, (count + count_new));
   T delta0 = mean - mean_new;
   mean = (mean_new * count_new + mean * count) * factor;
   m2n += m2n_new + delta0 * delta0 * count_new * count * factor;

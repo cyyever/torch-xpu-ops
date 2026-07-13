@@ -412,7 +412,7 @@ inline void welford_merge_element(
     const C& count_new,
     const T& mean_new,
     const T& m2n_new) {
-  T factor = T(1.0) / std::max(1, (count + count_new));
+  T factor = T(1.0) / sycl::max(1, (count + count_new));
   T delta0 = mean - mean_new;
   mean = (mean_new * count_new + mean * count) * factor;
   m2n += m2n_new + delta0 * delta0 * count_new * count * factor;
@@ -468,7 +468,7 @@ struct BatchNormCollectStatisticsKernelFunctor
       stat_accscalar_t o_avg = sycl::permute_group_by_xor(sg, avg, i);
       int o_n = sycl::permute_group_by_xor(sg, n, i);
       stat_accscalar_t factor = static_cast<stat_accscalar_t>(1.0) /
-          static_cast<stat_accscalar_t>(std::max(1, n + o_n));
+          static_cast<stat_accscalar_t>(sycl::max(1, n + o_n));
       var_n += sycl::permute_group_by_xor(sg, var_n, i) +
           (avg - o_avg) * (avg - o_avg) * n * o_n * factor;
       avg = (n * avg + o_n * o_avg) * factor;
@@ -500,7 +500,7 @@ struct BatchNormCollectStatisticsKernelFunctor
       stat_accscalar_t o_avg = sycl::permute_group_by_xor(sg, avg, i);
       int o_n = sycl::permute_group_by_xor(sg, n, i);
       stat_accscalar_t factor = static_cast<stat_accscalar_t>(1.0) /
-          static_cast<stat_accscalar_t>(std::max(1, n + o_n));
+          static_cast<stat_accscalar_t>(sycl::max(1, n + o_n));
       var_n += sycl::permute_group_by_xor(sg, var_n, i) +
           (avg - o_avg) * (avg - o_avg) * n * o_n * factor;
       avg = (n * avg + o_n * o_avg) * factor;

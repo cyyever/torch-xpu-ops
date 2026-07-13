@@ -79,7 +79,7 @@ struct CopyFunctor {
     const size_t n = tlAddress[tensor_loc].numel_to_tensor - chunk_offset;
 
     const size_t updated_chunk_size =
-        std::min(static_cast<size_t>(chunk_size), n);
+        sycl::min(static_cast<size_t>(chunk_size), n);
 
     src_t* src_ptr =
         static_cast<src_t*>(tlAddress[tensor_loc].addresses[0]) + chunk_offset;

@@ -70,8 +70,8 @@ struct QuantizedMaxPool2dKernelFunctor {
         // Get the boundary.
         int64_t h_start = row * sH_ - pH_;
         int64_t w_start = col * sW_ - pW_;
-        int64_t h_end = std::min(h_start + (kH_ - 1) * dH_ + 1, iH_);
-        int64_t w_end = std::min(w_start + (kW_ - 1) * dW_ + 1, iW_);
+        int64_t h_end = sycl::min(h_start + (kH_ - 1) * dH_ + 1, iH_);
+        int64_t w_end = sycl::min(w_start + (kW_ - 1) * dW_ + 1, iW_);
         while (h_start < 0)
           h_start += dH_;
         while (w_start < 0)

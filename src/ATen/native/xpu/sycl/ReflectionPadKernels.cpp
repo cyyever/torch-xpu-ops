@@ -39,8 +39,8 @@ inline std::pair<int64_t, int64_t> get_index_mapping1d(
       (item.get_group(1) + item.get_group(0) * item.get_group_range(1)) *
       output_w;
 
-  auto i_start_x = std::max(int64_t(0), -pad_l);
-  auto o_start_x = std::max(int64_t(0), pad_l);
+  auto i_start_x = sycl::max(int64_t(0), -pad_l);
+  auto o_start_x = sycl::max(int64_t(0), pad_l);
 
   int64_t input_x = sycl::abs(output_x - pad_l) -
       sycl::abs(output_x - (input_w + pad_l - 1)) - output_x + 2 * pad_l +
@@ -70,10 +70,10 @@ inline std::pair<int64_t, int64_t> get_index_mapping2d(
   auto output_x = output_xy % output_dim_x;
   auto output_y = output_xy / output_dim_x;
 
-  auto i_start_x = std::max(int64_t(0), -pad_l);
-  auto i_start_y = std::max(int64_t(0), -pad_t);
-  auto o_start_x = std::max(int64_t(0), pad_l);
-  auto o_start_y = std::max(int64_t(0), pad_t);
+  auto i_start_x = sycl::max(int64_t(0), -pad_l);
+  auto i_start_y = sycl::max(int64_t(0), -pad_t);
+  auto o_start_x = sycl::max(int64_t(0), pad_l);
+  auto o_start_y = sycl::max(int64_t(0), pad_t);
 
   int64_t input_x = sycl::abs(output_x - pad_l) -
       sycl::abs(output_x - (input_dim_x + pad_l - 1)) - output_x + 2 * pad_l +
@@ -559,12 +559,12 @@ struct ParallelReflectionPad3dKernelFunctor {
     int64_t output_y = (output_id / output_.size(4)) % output_.size(3);
     int64_t output_z = output_id / (output_.size(3) * output_.size(4));
 
-    int64_t i_start_x = std::max(int64_t(0), -pad_left_);
-    int64_t o_start_x = std::max(int64_t(0), pad_left_);
-    int64_t i_start_y = std::max(int64_t(0), -pad_top_);
-    int64_t o_start_y = std::max(int64_t(0), pad_top_);
-    int64_t i_start_z = std::max(int64_t(0), -pad_front_);
-    int64_t o_start_z = std::max(int64_t(0), pad_front_);
+    int64_t i_start_x = sycl::max(int64_t(0), -pad_left_);
+    int64_t o_start_x = sycl::max(int64_t(0), pad_left_);
+    int64_t i_start_y = sycl::max(int64_t(0), -pad_top_);
+    int64_t o_start_y = sycl::max(int64_t(0), pad_top_);
+    int64_t i_start_z = sycl::max(int64_t(0), -pad_front_);
+    int64_t o_start_z = sycl::max(int64_t(0), pad_front_);
 
     int64_t input_x = sycl::abs(output_x - pad_left_) -
         sycl::abs(output_x - (input_.size(4) + pad_left_ - 1)) - output_x +

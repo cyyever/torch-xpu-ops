@@ -46,7 +46,7 @@ static inline int p_start(
 }
 
 static inline int p_end(int size, int pad, int pooled_size, int stride) {
-  return std::min((size + pad) / stride + 1, pooled_size);
+  return sycl::min((size + pad) / stride + 1, pooled_size);
 }
 
 static inline bool can_use_int32_nhwc(
@@ -133,9 +133,9 @@ struct MaxPool2dKernelFunctor {
         index_t StartH = outputH * dH_ - padH_;
         index_t StartW = outputW * dW_ - padW_;
         index_t EndH =
-            std::min(StartH + (kH_ - 1) * dilationH_ + 1, inputSizeH_);
+            sycl::min(StartH + (kH_ - 1) * dilationH_ + 1, inputSizeH_);
         index_t EndW =
-            std::min(StartW + (kW_ - 1) * dilationW_ + 1, inputSizeW_);
+            sycl::min(StartW + (kW_ - 1) * dilationW_ + 1, inputSizeW_);
         while (StartH < 0)
           StartH += dilationH_;
         while (StartW < 0)
@@ -249,8 +249,10 @@ struct MaxPool2dChannelLastVec {
       }
       index_t StartH = outputH * dH_ - padH_;
       index_t StartW = outputW * dW_ - padW_;
-      index_t EndH = std::min(StartH + (kH_ - 1) * dilationH_ + 1, inputSizeH_);
-      index_t EndW = std::min(StartW + (kW_ - 1) * dilationW_ + 1, inputSizeW_);
+      index_t EndH =
+          sycl::min(StartH + (kH_ - 1) * dilationH_ + 1, inputSizeH_);
+      index_t EndW =
+          sycl::min(StartW + (kW_ - 1) * dilationW_ + 1, inputSizeW_);
       while (StartH < 0)
         StartH += dilationH_;
       while (StartW < 0)

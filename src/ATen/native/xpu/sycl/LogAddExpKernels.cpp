@@ -120,7 +120,7 @@ struct LogAddExpFunctor {
     if (sycl::isinf(a) && a == b) {
       return a;
     } else {
-      const auto m = std::max(a, b);
+      const auto m = sycl::max(a, b);
       return m + sycl::log1p(sycl::exp(-sycl::fabs(a - b)));
     }
   }
@@ -158,7 +158,7 @@ struct LogAddExp2Functor {
     if (sycl::isinf(a) && a == b) {
       return a;
     } else {
-      const auto m = std::max(a, b);
+      const auto m = sycl::max(a, b);
       return m + sycl::log1p(sycl::exp2(-sycl::fabs(a - b))) * inv_log_2;
     }
   }

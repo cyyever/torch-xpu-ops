@@ -57,7 +57,7 @@ struct ClampFunctor {
     if (at::_isnan(upper)) {
       return upper;
     } else {
-      return std::min(std::max(v, lower), upper);
+      return sycl::min(sycl::max(v, lower), upper);
     }
   }
 };
@@ -69,11 +69,11 @@ struct ClampScalarFunctor {
     if (_isnan(static_cast<opmath_t>(v))) {
       return v;
     } else if (minmax_ == at::native::detail::ClampLimits::Min) {
-      return std::max(static_cast<opmath_t>(v), lim0_val_);
+      return sycl::max(static_cast<opmath_t>(v), lim0_val_);
     } else if (minmax_ == at::native::detail::ClampLimits::Max) {
-      return std::min(static_cast<opmath_t>(v), lim0_val_);
+      return sycl::min(static_cast<opmath_t>(v), lim0_val_);
     } else {
-      return std::min(std::max(static_cast<opmath_t>(v), lim0_val_), lim1_val_);
+      return sycl::min(sycl::max(static_cast<opmath_t>(v), lim0_val_), lim1_val_);
     }
   }
   ClampScalarFunctor(

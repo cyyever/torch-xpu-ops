@@ -237,7 +237,7 @@ struct PointwiseApply2Functor {
           a_,
           b_,
           op_,
-          std::min(step, static_cast<int>(totalElements_ - linearIndex)),
+          sycl::min(step, static_cast<int>(totalElements_ - linearIndex)),
           linearIndex);
     }
   }

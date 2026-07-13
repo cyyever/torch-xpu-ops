@@ -77,7 +77,7 @@ struct OpDenseVectorizedFunctor {
         ceil_div(vecs_per_embedding_dim, chunks_per_batch_);
     const int64_t vec_start = chunk_idx * vecs_per_chunk;
     const int64_t chunk_end_vec = vec_start + vecs_per_chunk;
-    const int64_t vec_end = std::min(chunk_end_vec, vecs_per_embedding_dim);
+    const int64_t vec_end = sycl::min(chunk_end_vec, vecs_per_embedding_dim);
     const int64_t chunk_vec_count = vec_end - vec_start;
     const int64_t batch_start_elem = offsets_[batch_idx];
     const int64_t batch_end_elem = offsets_[batch_idx + 1];

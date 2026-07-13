@@ -76,7 +76,7 @@ inline void adam_math(
     const opmath_t step_size = lr / bias_correction1;
     opmath_t denom;
     if constexpr (amsgrad) {
-      opmath_t max_exp_avg_sq = std::max(
+      opmath_t max_exp_avg_sq = sycl::max(
           static_cast<opmath_t>(r_args[kMaxExpAvgSqIdx][ii]), exp_avg_sq);
       denom = (sycl::sqrt(max_exp_avg_sq) / bias_correction2_sqrt) + eps;
       r_args[kMaxExpAvgSqIdx][ii] = max_exp_avg_sq;

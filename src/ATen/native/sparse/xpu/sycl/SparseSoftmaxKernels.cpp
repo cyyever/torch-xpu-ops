@@ -81,7 +81,7 @@ struct MaxRowKernelFunctor {
       int64_t i = *(sorted_indices_ptr + offset + p);
       auto values_row = values_accessor[i].data();
       for (int64_t j = 0; j < nvalues; j++) {
-        mx_row[j] = std::max(mx_row[j], values_row[j]);
+        mx_row[j] = sycl::max(mx_row[j], values_row[j]);
       }
     }
   }

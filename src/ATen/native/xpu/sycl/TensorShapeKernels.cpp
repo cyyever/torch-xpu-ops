@@ -461,9 +461,9 @@ struct ChunkCatFunctor {
     char* dst_addr = reinterpret_cast<char*>(dst) + slice_idx * slice_size +
         chunk_idx * chunk_size + tensor_idx_to_start_tensor_bytes[tensor_idx];
     // Compute the actual number of bytes to copy from src.
-    const int64_t actual_copy_size = std::min(
+    const int64_t actual_copy_size = sycl::min(
         pad_tensor_chunk_sizes[tensor_idx] / dst_to_src_ratio,
-        std::max(
+        sycl::max(
             (int64_t)0,
             actual_tensor_sizes[tensor_idx] -
                 chunk_idx * pad_tensor_chunk_sizes[tensor_idx] /

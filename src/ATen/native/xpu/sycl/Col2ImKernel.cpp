@@ -43,10 +43,10 @@ struct Col2imKernelFunctor {
     // compute the start and end of the output
     const int64_t w_col_start =
         (w_im < kernel_extent_w) ? 0 : (w_im - kernel_extent_w) / stride_w + 1;
-    const int64_t w_col_end = std::min(w_im / stride_w + 1, output_width);
+    const int64_t w_col_end = sycl::min(w_im / stride_w + 1, output_width);
     const int64_t h_col_start =
         (h_im < kernel_extent_h) ? 0 : (h_im - kernel_extent_h) / stride_h + 1;
-    const int64_t h_col_end = std::min(h_im / stride_h + 1, output_height);
+    const int64_t h_col_end = sycl::min(h_im / stride_h + 1, output_height);
 
     for (int64_t h_col = h_col_start; h_col < h_col_end; h_col += 1) {
       for (int64_t w_col = w_col_start; w_col < w_col_end; w_col += 1) {

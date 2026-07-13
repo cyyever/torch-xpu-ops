@@ -19,13 +19,13 @@ namespace at::native::xpu {
 
 template <typename T>
 static inline T safe_max(T a, T b) {
-  T max = at::_isnan(a) ? a : (at::_isnan(b) ? b : std::max<T>(a, b));
+  T max = at::_isnan(a) ? a : (at::_isnan(b) ? b : sycl::max<T>(a, b));
   return max;
 }
 
 template <typename T>
 static inline T safe_min(T a, T b) {
-  T min = at::_isnan(a) ? a : (at::_isnan(b) ? b : std::min<T>(a, b));
+  T min = at::_isnan(a) ? a : (at::_isnan(b) ? b : sycl::min<T>(a, b));
   return min;
 }
 
