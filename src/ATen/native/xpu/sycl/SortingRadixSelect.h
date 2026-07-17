@@ -64,6 +64,7 @@
 #include <ATen/native/xpu/sycl/Atomics.h>
 #include <comm/SYCLContext.h>
 #include <comm/SYCLHelpers.h>
+#include <type_traits>
 
 namespace at::native::xpu {
 
@@ -212,51 +213,16 @@ struct TopKTypeConfig<at::BFloat16> {
 };
 
 template <typename T>
-struct Bitfield {};
+struct Bitfield {
+  static_assert(std::is_unsigned_v<T>);
 
-template <>
-struct Bitfield<unsigned int> {
-  static inline unsigned int getBitfield(unsigned int val, int pos, int len) {
-    pos &= 0xff;
-    len &= 0xff;
-    unsigned int m = (1u << len) - 1u;
+  static inline T getBitfield(T val, int pos, int len) {
+    T m = (T{1} << len) - 1;
     return (val >> pos) & m;
   }
 
-  static inline unsigned int setBitfield(
-      unsigned int val,
-      unsigned int toInsert,
-      int pos,
-      int len) {
-    pos &= 0xff;
-    len &= 0xff;
-    unsigned int m = (1u << len) - 1u;
-    toInsert &= m;
-    toInsert <<= pos;
-    m <<= pos;
-    return (val & ~m) | toInsert;
-  }
-};
-
-template <>
-struct Bitfield<uint64_t> {
-  static inline uint64_t getBitfield(uint64_t val, int pos, int len) {
-    pos &= 0xff;
-    len &= 0xff;
-
-    uint64_t m = (1u << len) - 1u;
-    return (val >> pos) & m;
-  }
-
-  static inline uint64_t setBitfield(
-      uint64_t val,
-      uint64_t toInsert,
-      int pos,
-      int len) {
-    pos &= 0xff;
-    len &= 0xff;
-
-    uint64_t m = (1u << len) - 1u;
+  static inline T setBitfield(T val, T toInsert, int pos, int len) {
+    T m = (T{1} << len) - 1;
     toInsert &= m;
     toInsert <<= pos;
     m <<= pos;
