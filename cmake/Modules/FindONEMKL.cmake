@@ -10,16 +10,14 @@ set(ONEMKL_FOUND FALSE)
 
 set(ONEMKL_LIBRARIES)
 
-# In order to be compatible with various situations of Pytorch development
-# bundle setup, ENV{MKLROOT} and SYCL_ROOT will be checked sequentially to get
-# the root directory of oneMKL.
+# ENV{MKLROOT} is authoritative when set; otherwise fall back to the oneAPI
+# bundle layout next to the SYCL compiler. Plain variable, re-evaluated on
+# every configure so environment changes are honored.
 if(DEFINED ENV{MKLROOT})
-  # Directly get the root directory of oneMKL if ENV{MKLROOT} exists.
-  set(ONEMKL_ROOT $ENV{MKLROOT})
+  set(ONEMKL_ROOT "$ENV{MKLROOT}")
 elseif(SYCL_FOUND)
-  # oneMKL configuration may not be imported into the build system. Get the root
-  # directory of oneMKL based on the root directory of compiler relatively.
-  get_filename_component(ONEMKL_ROOT "${SYCL_ROOT}/../../mkl/latest" REALPATH)
+  set(ONEMKL_ROOT "${SYCL_ROOT}/../../mkl/latest")
+  cmake_path(NORMAL_PATH ONEMKL_ROOT)
 endif()
 
 if(NOT DEFINED ONEMKL_ROOT)
@@ -30,7 +28,7 @@ if(NOT DEFINED ONEMKL_ROOT)
   return()
 endif()
 
-if(NOT EXISTS ${ONEMKL_ROOT})
+if(NOT EXISTS "${ONEMKL_ROOT}")
   message(
     WARNING
       "${ONEMKL_ROOT} not found, please setup oneAPI environment before building!!"

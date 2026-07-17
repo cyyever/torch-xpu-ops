@@ -46,7 +46,7 @@ if(NOT "${depend_text}" STREQUAL "")
     endif()
 
     if(file AND NOT IS_DIRECTORY "${file}")
-      get_filename_component(file_absolute "${file}" ABSOLUTE)
+      cmake_path(ABSOLUTE_PATH file NORMALIZE OUTPUT_VARIABLE file_absolute)
       list(APPEND dependency_list "${file_absolute}")
     endif()
 
