@@ -22,27 +22,28 @@ namespace at::native::xpu {
 template <typename scalar_t, int depth>
 void sgd_math(
     scalar_t r_args[depth][kILP],
-    const double weight_decay,
-    const double momentum,
+    const at::opmath_type<scalar_t> weight_decay,
+    const at::opmath_type<scalar_t> momentum,
     const float* lr_ptr,
-    const double lr,
-    const double dampening,
+    const at::opmath_type<scalar_t> lr,
+    const at::opmath_type<scalar_t> dampening,
     const bool nesterov,
     const bool maximize,
     const bool is_first_step,
     const float* grad_scale_ptr) {
   using opmath_t = at::opmath_type<scalar_t>;
-  const double double_lr = lr_ptr != nullptr ? *lr_ptr : lr;
+  const opmath_t lr_val =
+      lr_ptr != nullptr ? static_cast<opmath_t>(*lr_ptr) : lr;
 #pragma unroll
   for (int ii = 0; ii < kILP; ii++) {
     auto p = static_cast<opmath_t>(r_args[0][ii]);
     auto g = static_cast<opmath_t>(r_args[1][ii]);
     if (grad_scale_ptr) {
-      g /= static_cast<double>(*grad_scale_ptr);
+      g /= static_cast<opmath_t>(*grad_scale_ptr);
       r_args[1][ii] = g;
     }
     if (maximize) {
-      g *= -1.0;
+      g = -g;
     }
     if (weight_decay != 0) {
       g += weight_decay * p;
@@ -60,7 +61,7 @@ void sgd_math(
         g = momentum_buffer;
       }
     }
-    p -= double_lr * g;
+    p -= lr_val * g;
     r_args[0][ii] = p;
   }
 }

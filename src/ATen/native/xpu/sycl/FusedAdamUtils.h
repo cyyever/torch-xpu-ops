@@ -37,11 +37,11 @@ template <
     bool amsgrad>
 inline void adam_math(
     scalar_type r_args[depth][kILP],
-    const double& lr,
-    const double& beta1,
-    const double& beta2,
-    const double& weight_decay,
-    const double& eps,
+    const opmath_t& lr,
+    const opmath_t& beta1,
+    const opmath_t& beta2,
+    const opmath_t& weight_decay,
+    const opmath_t& eps,
     const bool& maximize,
     const float* grad_scale_ptr,
     const float* found_inf_ptr,
